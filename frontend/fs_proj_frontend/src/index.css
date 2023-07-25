@@ -51,6 +51,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   height: 100%;
+  width: 100%;
 }
 
 code {
@@ -118,8 +119,10 @@ div {
 }
 
 .chat {
+  z-index: 2;
   position: absolute;
   width: 100%;
+  height: 100%;
 }
 
 .registration-form label {
@@ -140,6 +143,7 @@ textarea{
 
 .vhod-button {
   margin-top: 50px;
+  margin-right: 20px;
 }
 
 .user-data {
@@ -179,3 +183,38 @@ textarea{
   margin-top: 10px;
 }
 
+.chat-class {
+  display: flex;
+  outline: 1px solid black;
+}
+
+.post-detail {
+  width: 70%;
+  height: 100%;
+  outline: 1px solid cyan;
+}
+
+.posts {
+  width: 30%;
+  height: 100%;
+  outline: 1px solid yellow;
+}
+
+.post-list-header {
+  height: 5%;
+  outline: 1px solid pink;
+}
+
+.post-list {
+  height: 90%;
+  outline: 1px solid purple;
+}
+
+.posts-add-new {
+  height: 5%;
+  outline: 1px solid black;
+}
+
+.posts-add-new input {
+  margin-top: 8px;
+}

@@ -21,9 +21,9 @@ function App() {
       <input type='button' className='trigger-button' onClick={() => chatState(false)} defaultValue='Profile' />
       <div className='content'>
         <div className='chat' onClick={clickHandler}>
-      <ChatPage />
+          <ChatPage authClass={authClass} />
         </div>
-      <ProfilePage isChat={isChat} authClass={authClass} />
+        <ProfilePage isChat={isChat} authClass={authClass} />
       </div>
     </div>
   );
