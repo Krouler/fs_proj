@@ -13,11 +13,11 @@ class CommentsSerializer(serializers.ModelSerializer):
 
 class PostSerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name='post-detail', read_only=True)
-    comment_list = CommentsSerializer()
+    comment_list = CommentsSerializer(read_only=True)
 
     class Meta:
         model = Post
-        fields = ('url', 'caption', 'description', 'comment_list', 'created_at', 'updated_at', 'created_by')
+        fields = ('id', 'user_id', 'url', 'caption', 'description', 'comment_list', 'created_at', 'updated_at', 'created_by')
         read_only_fields = ('id', 'url', 'comment_list', 'created_at', 'updated_at', 'created_by')
 
 
