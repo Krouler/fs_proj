@@ -118,7 +118,7 @@ div {
   min-width: 60%;
 }
 
-.chat {
+.post-page {
   z-index: 2;
   position: absolute;
   width: 100%;
@@ -183,7 +183,7 @@ textarea{
   margin-top: 10px;
 }
 
-.chat-class {
+.post-page-class {
   display: flex;
   outline: 1px solid black;
 }
@@ -217,4 +217,22 @@ textarea{
 
 .posts-add-new input {
   margin-top: 8px;
+}
+
+.post-detail {
+  background-image: url("C:\\Users\\lesor\\Downloads\\2443-fonyi-neon-oboi-1536x2048.jpg");
+}
+
+.post-form-dispatcher form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  align-content: center;
+  color: white;
+  margin-top: 20px;
+}
+
+.post-form-dispatcher form label,button {
+  margin-top: 20px;
 }

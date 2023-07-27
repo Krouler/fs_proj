@@ -6,7 +6,16 @@ class AuthStateToken {
         this.domain = 'http://localhost:8000/';
         this.path_to_token = 'token/';
         this.isAuthenticated = false;
+        this.userId = false;
         this.setInitialIsAuthenticated();
+    }
+
+    setUserId = (userId) => {
+        this.userId = userId
+    }
+
+    getUserId = () => {
+        return this.userId
     }
 
     logoutMethod = async () => {

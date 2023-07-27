@@ -1,29 +1,32 @@
 //import logo from './logo.svg';
 import { useState } from 'react';
 import './App.css';
-import ChatPage from './components/Chat';
+import PostPage from './components/Post';
 import ProfilePage from './components/Profile';
 import AuthStateToken from './components/AuthHelper/AuthClass';
 
 function App() {
-  const [isChat, chatState] = useState(true)
+  const [isPostPage, postPageState] = useState(true)
   const authClass = new AuthStateToken()
   authClass.setDomain('http://localhost:8000/')
   authClass.setPathToToken('token/')
   
+  const clickHandlerIfNotAuthed = () => {
+    postPageState(false);
+  }
 
   const clickHandler = () => {
-    chatState(true)
+    postPageState(true);
   }
 
   return (
     <div className="App" id='full-size' style={{position: 'static'}}>
-      <input type='button' className='trigger-button' onClick={() => chatState(false)} defaultValue='Profile' />
+      <input type='button' className='trigger-button' onClick={() => postPageState(false)} defaultValue='Профиль' />
       <div className='content'>
-        <div className='chat' onClick={clickHandler}>
-          <ChatPage authClass={authClass} />
+        <div className='post-page' onClick={clickHandler}>
+          <PostPage authClass={authClass} toggleIsPost={clickHandlerIfNotAuthed} />
         </div>
-        <ProfilePage isChat={isChat} authClass={authClass} />
+        <ProfilePage isPostPage={isPostPage} authClass={authClass} />
       </div>
     </div>
   );

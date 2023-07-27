@@ -25,7 +25,7 @@ class ProfilePage extends Component {
 
     render(){
     return(
-        <div className="profile" style={this.props.isChat ? {width: 0, opacity: 0, left: -40 + '%'}: {width: 100 + '%'}}>
+        <div className="profile" style={this.props.isPostPage ? {width: 0, opacity: 0, left: -40 + '%'}: {width: 100 + '%'}}>
             <div className="profile-header">
                 <h1>Профиль</h1>
             </div>
