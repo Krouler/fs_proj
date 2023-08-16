@@ -21,25 +21,30 @@ class AuthStateToken {
     logoutMethod = async () => {
         this.cookieClass.remove('access');
         this.cookieClass.remove('refresh');
+        this.setNotAuthenticated();
     }
 
     setInitialIsAuthenticated = async () => {
-        if (await this.getAccessToken() !== false){
-            this.setAuthenticated();
+        if (!this.getIsAuthenticated()) {
+            if (await this.getAccessToken() !== false ){
+                this.setAuthenticated();
+            }
         }
     }
 
-    getIsAuthenticated = async () => {
-        await this.getAccessToken();
-        return this.isAuthenticated;
+    getIsAuthenticated = () => {
+        if (typeof localStorage.getItem('isAuthenticated') !== "undefined") {
+            return localStorage.getItem('isAuthenticated') === "true"
+        }
+        return false
     }
 
     setNotAuthenticated(){
-        this.isAuthenticated = false;
+        localStorage.setItem("isAuthenticated", "false");
     }
 
     setAuthenticated(){
-        this.isAuthenticated = true;
+        localStorage.setItem("isAuthenticated", "true");
     }
 
     getDomain(){

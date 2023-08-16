@@ -11,15 +11,14 @@ class ProfilePage extends Component {
             isAuthenticated: false,
         }
         this.getIsAuthenticated = this.getIsAuthenticated.bind(this)
-        this.getIsAuthenticated();
     }
 
     componentDidMount() {
         this.getIsAuthenticated();
     }
 
-    getIsAuthenticated = async () => {
-    let flag = await this.props.authClass.getIsAuthenticated();
+    getIsAuthenticated = () => {
+    let flag = this.props.authClass.getIsAuthenticated();
     this.setState({isAuthenticated: flag})
     }
 

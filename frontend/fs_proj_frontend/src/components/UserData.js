@@ -19,15 +19,10 @@ class UserData extends Component {
         this.toggleIsEdit = this.toggleIsEdit.bind(this)
         this.renderDependsOnIsEdit = this.renderDependsOnIsEdit.bind(this)
         this.editSubmitHandler = this.editSubmitHandler.bind(this)
+        this.fetchingData = this.fetchingData.bind(this)
     }
 
-
-
-    getUserData = async () => {
-        let access_token = await this.props.authClass.getAccessToken()
-        if (typeof access_token === 'undefined'){
-            this.props.authClass.setNotAuthenticated();
-        } else {
+    fetchingData = async (access_token) => {
         let userData = await fetch(this.props.authClass.getDomain()+'auth/profile/me/', {
             method: 'GET',
             headers: {
@@ -36,14 +31,29 @@ class UserData extends Component {
                 'Authorization': 'Bearer ' + access_token,
             }
         });
+        return userData
+    }
+
+    getUserData = async () => {
+        let access_token = this.props.authClass.cookieClass.get("access")
+        if (typeof access_token === 'undefined'){
+            access_token = await this.props.authClass.getAccessToken()
+        }
+        let userData = await this.fetchingData(access_token);
+        console.log(userData.status)
+        if (userData.status === 401){
+            access_token = await this.props.authClass.getAccessToken()
+            userData = await this.fetchingData(access_token);
+        }
         let userData_json = await userData.json();
         return await userData_json.profile
     }
-    }
 
     retrieveUserData = async () => {
+        console.log("start fetch")
         let data = await this.getUserData();
-        if (data !== 'undefined'){
+        console.log(data)
+        if (typeof data !== 'undefined'){
             this.setState({ user_id: data.user,
                             first_name: data.first_name,
                             last_name: data.last_name,
@@ -53,8 +63,8 @@ class UserData extends Component {
         }
     }
 
-    componentDidMount = () => {
-        this.retrieveUserData();
+    async componentDidMount() {
+        await this.retrieveUserData();
     }
 
     logoutButtonHandler = async () => {
