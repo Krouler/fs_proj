@@ -1,6 +1,7 @@
 import { Component } from "react";
 import PostCreationFormDispatcher from "./PostEditOrCreateFormDispatcher";
 import PostDetail from "./PostDetail";
+import PostList from "./PostList";
 
 class PostPage extends Component {
     constructor(props){
@@ -111,7 +112,7 @@ class PostPage extends Component {
                     <div className="post-list-header">
                     </div>
                     <div className="post-list">
-                    <h1>TIS LIST PAGE</h1>
+                    <PostList authClass={this.props.authClass}/>
                     </div>
                     <div className="posts-add-new">
                     <input type="button" defaultValue="Создать пост" onClick={this.testButtonHandler} />

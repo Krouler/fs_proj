@@ -9,7 +9,7 @@ from app_post.serializers import PostSerializer, CommentsSerializer
 class PostViewSet(viewsets.ModelViewSet):
     serializer_class = PostSerializer
     permission_classes = (IsAuthenticatedOrIsOwnerOrReadOnly,)
-    queryset = Post.objects.all()
+    queryset = Post.objects.order_by('-created_at').all()
     lookup_field = 'pk'
 
     def perform_create(self, serializer):
