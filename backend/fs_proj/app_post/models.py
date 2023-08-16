@@ -35,7 +35,7 @@ class Comment(models.Model):
 
     @property
     def commented_by(self):
-        return self.user.username
+        return f'{self.user.profile.last_name} {self.user.profile.first_name}'
 
     class Meta:
         verbose_name = 'Комментарий'

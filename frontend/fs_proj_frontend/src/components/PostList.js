@@ -6,9 +6,12 @@ class PostList extends Component {
         super(props);
         this.state = {
             responseObject: null,
+            needUpdateData: false,
+            updateButtonEnable: true,
         }
 
         this.fetchData = this.fetchData.bind(this)
+        this.toggleNeedUpdateData = this.toggleNeedUpdateData.bind(this)
 
     }
 
@@ -16,6 +19,17 @@ class PostList extends Component {
         this.fetchData()
     }
 
+    componentDidUpdate(prevProps, prevState){
+        if (this.state.needUpdateData) {
+            this.fetchData();
+            this.setState({needUpdateData: false})
+        }
+    }
+
+    toggleNeedUpdateData = () => {
+        this.setState({needUpdateData: true})
+    }
+    
     fetchData = async () => {
         let data = await fetch(this.props.authClass.getDomain() + 'api/post/', {
             method: 'GET',
@@ -30,7 +44,7 @@ class PostList extends Component {
     anyCaptionOnClickHandler(id){
         this.state.responseObject.results.forEach(element => {
             if (element.id === id) {
-                console.log(element)
+                this.props.detailPostView(element)
             }
         })
     }
@@ -49,6 +63,7 @@ class PostList extends Component {
         }
         return(
             <div className="post-list-items">
+                <input type="button" className="update-post-list" defaultValue={"↻"} onClick={() => this.toggleNeedUpdateData()} />
                 {flag ? post_list_rows : (<h3>no posts yet</h3>)}
             </div>
         )

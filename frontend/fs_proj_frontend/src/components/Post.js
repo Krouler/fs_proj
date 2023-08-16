@@ -18,10 +18,10 @@ class PostPage extends Component {
             postCreatedAt: '',
             postUpdatedAt: '',
             postCreatedBy: '',
-            postCommentList: [],
+            postComments: [],
         }
 
-        this.testButtonHandler = this.testButtonHandler.bind(this)
+        this.postCreateButtonHandler = this.postCreateButtonHandler.bind(this)
         this.getIsAuthenticated = this.getIsAuthenticated.bind(this)
         this.toggleIsPostCreation = this.toggleIsPostCreation.bind(this)
         this.toggleIsPostEdit = this.toggleIsPostEdit.bind(this)
@@ -29,6 +29,7 @@ class PostPage extends Component {
         this.giveDataToRepresentation = this.giveDataToRepresentation.bind(this)
         this.setDataToEdit = this.setDataToEdit.bind(this)
         this.setDataAfterPost = this.setDataAfterPost.bind(this)
+        this.detailPostView = this.detailPostView.bind(this)
         this.getIsAuthenticated();
 
     }
@@ -41,21 +42,34 @@ class PostPage extends Component {
             postCreatedAt: data.postCreatedAt,
             postUpdatedAt: data.postUpdatedAt,
             postCreatedBy: data.postCreatedBy,
-            postCommentList: [],
+            postComments: [],
             isAfterPost: true
         })
     }
 
     giveDataToRepresentation = () => {
         return {
-            postId: '',
-            postCaption: '',
-            postDescription: '',
-            postCreatedAt: '',
-            postUpdatedAt: '',
-            postCreatedBy: '',
-            postCommentList: {},
+            postId: this.state.postId,
+            postCaption: this.state.postCaption,
+            postDescription: this.state.postDescription,
+            postCreatedAt: this.state.postCreatedAt,
+            postUpdatedAt: this.state.postUpdatedAt,
+            postCreatedBy: this.state.postCreatedBy,
+            postComments: this.state.postComments,
         }
+    }
+
+    detailPostView = (postItemObject) => {
+        this.setState({
+            postId: postItemObject.id,
+            postCaption: postItemObject.caption,
+            postDescription: postItemObject.description,
+            postCreatedAt: postItemObject.created_at,
+            postUpdatedAt: postItemObject.updated_at,
+            postCreatedBy: postItemObject.created_by,
+            postComments: postItemObject.comments,
+        })
+
     }
 
     setDataToEdit = (data) => {
@@ -93,7 +107,7 @@ class PostPage extends Component {
             isPostCreation: !this.isPostCreation})
     }
 
-    testButtonHandler = async () => {
+    postCreateButtonHandler = async () => {
         let flag = await this.getIsAuthenticated()
         if (flag){
             this.toggleIsPostCreation();
@@ -106,16 +120,16 @@ class PostPage extends Component {
         return(
             <div className="post-page-class">
                 <div className="post-detail">
-                    {this.state.needUpdateOrCreatePost ? <PostCreationFormDispatcher toggleIsPostCreation={this.toggleIsPostCreation} toggleIsPostEdit={this.toggleIsPostEdit} setDataAfterPost={this.setDataAfterPost} isCreate={this.state.isPostCreation} authClass={this.props.authClass} />: <PostDetail />}
+                    {this.state.needUpdateOrCreatePost ? <PostCreationFormDispatcher toggleIsPostCreation={this.toggleIsPostCreation} toggleIsPostEdit={this.toggleIsPostEdit} setDataAfterPost={this.setDataAfterPost} isCreate={this.state.isPostCreation} authClass={this.props.authClass} />: <PostDetail postData={this.giveDataToRepresentation()} />}
                 </div>
                 <div className="posts">
                     <div className="post-list-header">
                     </div>
                     <div className="post-list">
-                    <PostList authClass={this.props.authClass}/>
+                    <PostList detailPostView={this.detailPostView} authClass={this.props.authClass}/>
                     </div>
                     <div className="posts-add-new">
-                    <input type="button" defaultValue="Создать пост" onClick={this.testButtonHandler} />
+                    <input type="button" defaultValue="Создать пост" onClick={this.postCreateButtonHandler} />
                     </div>
                 </div>
             </div>

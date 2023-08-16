@@ -254,8 +254,26 @@ textarea{
 
 .post-list-item-caption:hover {
   color: #97ddb2;
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none;
 }
 
 .post-list-item-caption:active {
   color: rgb(9, 223, 80);
+  
+}
+
+.post-detail-represent {
+  color: white;
+}
+
+.update-post-list {
+  position: absolute;
+  left: 70%;
+  top: 0;
+  color: black;
 }

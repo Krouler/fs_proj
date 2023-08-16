@@ -24,7 +24,7 @@ class CreatePost extends Component {
             })
             return
         }
-        if (event.target.caption.value.length <= 10){
+        if (event.target.caption.value.length <= 3){
             this.setState({
                 errMsgOverall:' ',
                 errMsg1: 'Заголовок слишком короткий! Давайте, я в вас верю, придумайте что то !',
@@ -53,6 +53,10 @@ class CreatePost extends Component {
                 'description': event.target.description.value
             })
         })
+        console.log(access_token)
+        console.log(event.target.csrfmiddlewaretoken.value)
+        console.log(event.target.caption.value)
+        console.log(event.target.description.value)
         let data_json = await data.json()
         this.props.setDataAfterPost(data_json);
         this.props.toggleIsPostCreation();
