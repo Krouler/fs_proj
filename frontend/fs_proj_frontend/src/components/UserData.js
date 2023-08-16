@@ -40,7 +40,6 @@ class UserData extends Component {
             access_token = await this.props.authClass.getAccessToken()
         }
         let userData = await this.fetchingData(access_token);
-        console.log(userData.status)
         if (userData.status === 401){
             access_token = await this.props.authClass.getAccessToken()
             userData = await this.fetchingData(access_token);
@@ -50,9 +49,7 @@ class UserData extends Component {
     }
 
     retrieveUserData = async () => {
-        console.log("start fetch")
         let data = await this.getUserData();
-        console.log(data)
         if (typeof data !== 'undefined'){
             this.setState({ user_id: data.user,
                             first_name: data.first_name,
