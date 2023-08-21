@@ -17,6 +17,9 @@ class PostDetail extends Component {
             deleteWinodwIsActive: false,
             editDataIsActive: false,
             postData: {postId: 0},
+
+            captionEditErrMsg: '',
+            descriptionEditErrMsg: '',
         }
 
         this.representData = this.representData.bind(this)
@@ -29,6 +32,9 @@ class PostDetail extends Component {
         this.editPostButtonHandler = this.editPostButtonHandler.bind(this)
         this.showEditPostForm = this.showEditPostForm.bind(this)
         this.dataForRepresentation = this.dataForRepresentation.bind(this)
+        this.editButtonHandler = this.editButtonHandler.bind(this)
+        this.performEdit = this.performEdit.bind(this)
+        this.updatePostData = this.updatePostData.bind(this)
 
     }
 
@@ -66,7 +72,6 @@ class PostDetail extends Component {
                 <div className="post-detail-comment-list">
                     {flag ? comment_list : <h3>No comments yet</h3>}
                 </div>
-
             </div>
         )
 
@@ -82,22 +87,87 @@ class PostDetail extends Component {
     }   
     
     editPostButtonHandler = () => {
-        this.setState({editDataIsActive: !this.state.editDataIsActive})
+        this.setState({
+            editDataIsActive: !this.state.editDataIsActive,
+            captionEditErrMsg: '',
+            descriptionEditErrMsg: '',
+        })
     }
 
     showEditPostForm = () => {
         return (
             <div className="edit-post-form">
-                <form onSubmit="">
+                <form onSubmit={this.editButtonHandler}>
                     <CSRF_TOKENINPUT />
-                    <label htmlFor="post-caption">Ваше имя</label>
-                    <input id="post-caption" name="caption" type="text" defaultValue={this.state.postCaption} />
-                    <label htmlFor="post-description">Ваше имя</label>
-                    <textarea id="post-description" name="description" defaultValue={this.state.postDescription}></textarea>
+                    <label htmlFor="post-caption">Заголовок</label>
+                    <input id="post-caption" name="caption" type="text" defaultValue={this.state.postData.postCaption} />
+                    {this.state.captionEditErrMsg}
+                    <label htmlFor="post-description">Текст</label>
+                    <textarea id="post-description" name="description" defaultValue={this.state.postData.postDescription}></textarea>
+                    {this.state.descriptionEditErrMsg}
                     <button type="submit">Изменить</button>
                 </form>
             </div>
         )
+    }
+
+    editButtonHandler = async (event) => {
+        event.preventDefault();
+        let errFlag = false;
+        let errCollector = {};
+        if (event.target.caption.value.length < 5) {
+            errCollector.captionEditErrMsg = "Количество символов заголовка должно быть больше 5!";
+            errCollector.descriptionEditErrMsg = '';
+            errFlag = true;
+        }
+        if (event.target.description.value.length < 10) {
+            errCollector.descriptionEditErrMsg = "Количество символов текста должно быть больше 10!";
+            if (!errFlag){
+                errCollector.captionEditErrMsg = '';
+            }
+            errFlag = true;
+        }
+        if (errFlag){
+            this.setState(errCollector)
+        } else if (this.state.postData.postCaption !== event.target.caption.value || this.state.postData.postDescription !== event.target.description.value) {
+            let method = "PATCH"
+            if (this.state.postData.postCaption !== event.target.caption.value && this.state.postData.postDescription !== event.target.description.value) {
+                method = "PUT"
+            } 
+            this.updatePostData(await this.performEdit(event.target, method));
+        } else {
+            this.editPostButtonHandler();
+        }
+    }
+
+    performEdit = async (data, method) => {
+        let access_token = await this.props.authClass.getAccessToken()
+        let response = await fetch(this.props.authClass.getDomain() + "api/post/"  + this.state.postData.postId + "/", {
+            method: method,
+            headers: {
+                "Authorization": "Bearer " + access_token,
+                "Content-type": "application/json",
+                "Accept": "application/json",
+                "X-CSRFToken": data.csrfmiddlewaretoken.value
+            },
+            body: JSON.stringify({
+                caption: data.caption.value,
+                description: data.description.value
+            })
+        })
+        let response_json = response.json();
+        return response_json
+    }
+
+    updatePostData = (data) => {
+        let postData = this.state.postData;
+        postData.postCaption = data.caption;
+        postData.postDescription = data.description;
+        this.setState({
+            postData: postData,
+            editDataIsActive: false,
+        })
+        this.props.setNeedUpdateData(true);
     }
 
     deletePostButtonHandler = () => {
@@ -142,13 +212,13 @@ class PostDetail extends Component {
         this.setState({deleteWinodwIsActive: false, editDataIsActive: false,})
     }
 
-    componentDidUpdate(prevProps, prevState){
+    componentDidUpdate = async (prevProps, prevState) => {
         if (prevProps.postData.postId !== this.props.postData.postId){
             let tempArg;
             if (this.props.postData.postId !== 0) {
                 tempArg = true;
             }
-            this.setState({isDataLoaded: tempArg, postData: this.props.postData, userId: this.props.postData.userId, deleteWinodwIsActive: false, debugState: 1, editDataIsActive: false,})
+            await this.setState({isDataLoaded: tempArg, postData: this.props.postData, userId: this.props.postData.userId, deleteWinodwIsActive: false, debugState: 1, editDataIsActive: false,});
         }
     }
 
@@ -158,6 +228,8 @@ class PostDetail extends Component {
             isDataLoaded: false,
             deleteWinodwIsActive: false,
             editDataIsActive: false,
+            captionEditErrMsg: '',
+            descriptionEditErrMsg: '',
         })
         this.props.clearData();
     }
