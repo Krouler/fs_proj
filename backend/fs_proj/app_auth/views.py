@@ -7,10 +7,12 @@ from rest_framework.generics import GenericAPIView, CreateAPIView
 from rest_framework.response import Response
 from rest_framework.status import HTTP_401_UNAUTHORIZED
 from rest_framework.viewsets import ViewSet, GenericViewSet
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 from app_auth.models import Profile
 from app_auth.permissions import NotAuthenticated, ReadOnly, IsOwnerOrReadOnly
-from app_auth.serializer import CreateUserSerializer, RetrieveUserInfoSerializer, RetrieveUserProfile
+from app_auth.serializer import CreateUserSerializer, RetrieveUserInfoSerializer, RetrieveUserProfile, \
+    MorphedTokenObtainPairSerializer
 
 
 class RegistrationApiView(CreateAPIView):
@@ -56,4 +58,8 @@ class MyPageViewSet(mixins.UpdateModelMixin, mixins.RetrieveModelMixin, GenericV
         if not request.user.is_authenticated:
             return Response({'detail': 'need authentication to perform', 'status': '401'}, status=HTTP_401_UNAUTHORIZED)
         return super().update(request, *args, **kwargs)
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MorphedTokenObtainPairSerializer
+
 

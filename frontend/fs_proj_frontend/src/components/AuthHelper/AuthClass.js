@@ -10,12 +10,8 @@ class AuthStateToken {
         this.setInitialIsAuthenticated();
     }
 
-    setUserId = (userId) => {
-        this.userId = userId
-    }
-
     getUserId = () => {
-        return this.userId
+        return +localStorage.getItem("userId")
     }
 
     logoutMethod = async () => {
@@ -41,6 +37,7 @@ class AuthStateToken {
 
     setNotAuthenticated(){
         localStorage.setItem("isAuthenticated", "false");
+        localStorage.setItem("userId", "0")
     }
 
     setAuthenticated(){
@@ -72,13 +69,13 @@ class AuthStateToken {
                 'password': password
             })
         })
-
         let response_json = await response.json()
         if (response_json.detail === "No active account found with the given credentials") {
             return false
         } 
         this.cookieClass.set('access', response_json.access, {maxAge: 60*3});
         this.cookieClass.set('refresh', response_json.refresh, {maxAge: 60*60*24}); 
+        localStorage.setItem("userId", response_json.user_id)
         return await this.getAccessToken()
     }
 

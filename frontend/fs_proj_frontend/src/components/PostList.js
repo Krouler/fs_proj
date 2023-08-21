@@ -5,7 +5,7 @@ class PostList extends Component {
     constructor(props){
         super(props);
         this.state = {
-            responseObject: null,
+            responseObject: {count: 0},
             needUpdateData: false,
             updateButtonEnable: true,
         }
@@ -20,9 +20,10 @@ class PostList extends Component {
     }
 
     componentDidUpdate(prevProps, prevState){
-        if (this.state.needUpdateData) {
+        if (this.state.needUpdateData || this.props.getNeedUpdateData()) {
             this.fetchData();
             this.setState({needUpdateData: false})
+            this.props.setNeedUpdateData(false)
         }
     }
 
@@ -52,11 +53,11 @@ class PostList extends Component {
     render(){
         let post_list_rows = [];
         let flag = false
-        if (this.state.responseObject !== null){
+        if (this.state.responseObject.count > 0){
             flag = true
             this.state.responseObject.results.forEach(element => {
-                post_list_rows.push(<div key={element.id} className="post-list-item">
-                    <h3 className="post-list-item-caption" onClick={this.anyCaptionOnClickHandler.bind(this, element.id)}>{element.caption}</h3>
+                post_list_rows.push(<div key={element.id} className="post-list-item" onClick={this.anyCaptionOnClickHandler.bind(this, element.id)}>
+                    <h3 className="post-list-item-caption" >{element.caption}</h3>
                     <p>{element.description.length < 15 ? element.description : element.description.substring(0, 12) + "..."}</p>
                     </div>)
             });

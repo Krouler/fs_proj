@@ -56,7 +56,6 @@ class UserData extends Component {
                             last_name: data.last_name,
                             email: data.email,
                             about_me: data.about_me})
-            this.props.authClass.setUserId(data.user)
         }
     }
 
